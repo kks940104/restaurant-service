@@ -1,4 +1,4 @@
-package org.restaurant.entities;
+package org.kks.restaurant.entities;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QRestaurant extends EntityPathBase<Restaurant> {
 
-    private static final long serialVersionUID = -776041533L;
+    private static final long serialVersionUID = 42766590L;
 
     public static final QRestaurant restaurant = new QRestaurant("restaurant");
 

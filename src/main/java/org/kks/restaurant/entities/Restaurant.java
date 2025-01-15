@@ -1,4 +1,4 @@
-package org.restaurant.entities;
+package org.kks.restaurant.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
