@@ -37,6 +37,7 @@ public class Transfer {
                             .seq(Long.parseLong(item.get(0)))
                             .name(item.get(21))
                             .category(item.get(25))
+                            
                             .address(item.get(19) + " " + item.get(20))
                             .latitude(location[1])
                             .longitude(location[0])

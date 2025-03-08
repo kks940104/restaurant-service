@@ -1,9 +1,13 @@
 package org.kks.restaurant.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.kks.global.paging.ListData;
 import org.kks.restaurant.entities.Restaurant;
 import org.kks.restaurant.exceptions.RestaurantNotFoundException;
 import org.kks.restaurant.services.RestaurantInfoService;
+import org.kks.restaurant.services.RestaurantSearchService;
+import org.kks.restaurant.services.WishService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +19,8 @@ import java.util.List;
 public class RestaurantController {
 
     private final RestaurantInfoService infoService;
+    private final RestaurantSearchService searchService;
+    private final WishService wishService;
 
     @GetMapping("/info/{seq}")
     public Restaurant info(@PathVariable("seq") Long seq) {
@@ -22,7 +28,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/list")
-    public List<Restaurant> list(RestaurantSearch search) {
+    public ListData<Restaurant> list(RestaurantSearch search) {
         return infoService.getList(search);
     }
 
@@ -31,9 +37,48 @@ public class RestaurantController {
         return infoService.getCategories();
     }
 
+    /**
+     * 좌표로 근처에 있는 식당 조회
+     *
+     * @return
+     */
+    @GetMapping("/search")
+    public ListData<Restaurant> search(@ModelAttribute NeighborSearch search) {
+        List<Long> seq = searchService.search(search);
+        if (seq == null || seq.isEmpty()) {
+            return new ListData<>();
+        }
+
+        search.setSeq(seq);
+        return infoService.getList(search);
+    }
+
     @ExceptionHandler(RestaurantNotFoundException.class)
     public ResponseEntity<Void> errorHandler() {
 
         return ResponseEntity.notFound().build();
+    }
+
+    /**
+     * 찜하기 토글
+     *
+     * @param uid
+     * @param seq
+     */
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @GetMapping("/wish/{uid}/{seq}")
+    public void updateWish(@PathVariable("uid") String uid, @PathVariable("seq") Long seq) {
+        wishService.process(uid, seq);
+    }
+
+    @GetMapping("/wish/my/{uid}")
+    public ListData<Restaurant> getMyWish(@PathVariable("uid") String uid, @ModelAttribute RestaurantSearch search) {
+        return wishService.getMyWish(uid, search);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/wish/truncate/{uid}")
+    public void truncate(@PathVariable("uid") String uid) {
+        wishService.truncate(uid);
     }
 }
