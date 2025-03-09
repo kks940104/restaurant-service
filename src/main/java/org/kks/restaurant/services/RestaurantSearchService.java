@@ -27,7 +27,6 @@ public class RestaurantSearchService {
         int limit = search.getLimit();
 
         try {
-
             String data = om.writeValueAsString(List.of(limit, lat, lon));
 
             ProcessBuilder builder = new ProcessBuilder(runPath, scriptPath + "search.py", data);

@@ -107,4 +107,8 @@ public class RestaurantInfoService {
 
         return items;
     }
+
+    public List<Restaurant> trainGet() {
+        return restaurantRepository.findAll();
+    }
 }

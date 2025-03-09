@@ -37,6 +37,11 @@ public class RestaurantController {
         return infoService.getCategories();
     }
 
+    @GetMapping("/trainAll")
+    public List<Restaurant> trainAll() {
+        return infoService.trainGet();
+    }
+
     /**
      * 좌표로 근처에 있는 식당 조회
      *
